@@ -105,43 +105,43 @@ body {
 /* Team toggle */
 .team-toggle {
   max-width: 900px;
-  margin: 12px auto 0;
+  margin: 8px auto 0;
   padding: 0 14px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 6px;
 }
 .team-btn {
   background: var(--surface);
   border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 12px;
+  border-radius: 8px;
+  padding: 6px 10px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   transition: all 0.15s;
   text-align: left;
   color: var(--text);
 }
-.team-btn .tb-label {
-  font-family: var(--display);
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--text-mute);
-  margin-bottom: 2px;
-}
+.team-btn .tb-label { display: none; }
 .team-btn .tb-name {
   font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 1.5px;
+  font-size: 14px;
+  letter-spacing: 1px;
   line-height: 1;
-  margin-bottom: 4px;
+  margin: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .team-btn .tb-score {
   font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
+  margin-left: auto;
 }
 .team-btn.a .tb-name { color: var(--team-a); }
 .team-btn.a .tb-score { color: var(--team-a); }
@@ -680,6 +680,41 @@ body {
   gap: 5px;
   max-height: 60vh;
   overflow-y: auto;
+}
+.sort-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.sort-label {
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-mute);
+  text-transform: uppercase;
+}
+.sort-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sort-btn:hover { color: var(--text); border-color: var(--border-bright); }
+.sort-btn.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
 }
 .order-item {
   display: grid;
@@ -1344,9 +1379,93 @@ body {
   .outcome-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* Landscape mode optimizations — phone in horizontal */
-.landscape-grid { display: contents; }
+/* Side-by-side layout: vertical field on left (20%), action buttons on right (80%) */
+.landscape-grid {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 10px;
+  align-items: stretch;
+}
+.landscape-col { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.landscape-col .section-title { padding: 0 2px; margin: 4px 0 2px; }
+.landscape-col .field-wrap { padding: 0; flex: 1; display: flex; flex-direction: column; }
+.landscape-col .events-grid { padding: 0; grid-template-columns: repeat(3, 1fr); }
+.events-hint { padding: 4px 0 0; font-size: 10px; }
 
+/* Vertical field — fills available height of the right column */
+.field-vertical .field-wrap { height: 100%; }
+.field-vertical .field {
+  padding: 4px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.field-vertical .field-header {
+  display: none;
+}
+.field-vertical .field-legend {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 6px 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.field-vertical .field-legend b { margin-right: 2px; }
+.field-vertical .zones {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 3px;
+  flex: 1;
+  height: auto;
+}
+.field-vertical .zone {
+  min-height: 0;
+  flex-direction: row;
+  padding: 2px 4px;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  border-radius: 5px;
+}
+.field-vertical .zone-num {
+  font-size: 13px;
+  margin-bottom: 0;
+  margin-right: 2px;
+  font-weight: 800;
+}
+.field-vertical .zone-label {
+  font-size: 8.5px;
+  text-align: right;
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+/* Selection bar full width across both columns */
+.landscape-grid .selection-bar {
+  grid-column: 1 / -1;
+  margin-top: 0;
+  padding: 0;
+}
+
+.landscape-col .section-title { font-size: 9.5px; letter-spacing: 1.5px; }
+
+@media (max-width: 380px) {
+  .landscape-grid { grid-template-columns: 22% 1fr; gap: 6px; padding: 0 8px; }
+  .field-vertical .zone-label { font-size: 7.5px; }
+  .field-vertical .zone-num { font-size: 12px; }
+  .landscape-col .events-grid { gap: 4px; }
+}
+
+/* Landscape mode (phone horizontal): more space for buttons */
 @media (orientation: landscape) and (max-height: 500px) {
   body { padding-bottom: 70px; }
   .header { padding: 6px 14px; }
@@ -1354,7 +1473,6 @@ body {
   .mini-score { font-size: 12px; }
   .icon-btn { width: 28px; height: 28px; font-size: 13px; }
 
-  /* Compact team toggle */
   .team-toggle { margin-top: 6px; gap: 6px; }
   .team-btn { padding: 5px 9px; flex-direction: row; align-items: center; gap: 8px; }
   .team-btn .tb-label { display: none; }
@@ -1365,39 +1483,17 @@ body {
   .timer-btn, .timer-reset { height: 22px; }
   .timer-text { font-size: 11px; }
 
-  /* Section titles smaller */
   .section-title { margin: 8px auto 4px; font-size: 9.5px; letter-spacing: 1.8px; }
 
-  /* Two-column main layout: field on left, events on right */
-  .landscape-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 10px;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 14px;
-  }
-  .landscape-col { display: flex; flex-direction: column; gap: 6px; }
-  .landscape-col .section-title { padding: 0; margin: 4px 0 2px; }
-  .landscape-col .field-wrap { padding: 0; }
-  .landscape-col .events-grid { padding: 0; grid-template-columns: repeat(4, 1fr); }
-  .landscape-col .selection-bar { padding: 0; }
+  .landscape-grid { grid-template-columns: 14% 1fr; gap: 8px; }
+  .landscape-col .events-grid { grid-template-columns: repeat(5, 1fr); }
   .events-hint { padding: 4px 0 0; font-size: 10px; }
 
-  /* Smaller field zones */
-  .zone { min-height: 60px; padding: 6px 3px; }
-  .zone-num { font-size: 13px; }
-  .zone-label { font-size: 9px; }
-
-  /* Smaller event buttons */
-  .event-btn { min-height: 50px; padding: 6px 4px; }
-  .event-icon { font-size: 14px; }
+  .event-btn { min-height: 56px; padding: 6px 4px; }
+  .event-icon { font-size: 13px; }
   .event-name { font-size: 11px; }
 
-  /* Stats panel collapsed by default — always */
   .stats-panel { padding: 0 14px; max-width: 1100px; }
-
-  /* Slimmer bottom bar */
   .bottom-bar { padding: 6px 14px calc(6px + env(safe-area-inset-bottom)); }
   .bar-btn { padding: 6px 4px; font-size: 10px; }
   .bar-btn-icon { font-size: 13px; }
@@ -1452,26 +1548,16 @@ body {
 </div>
 
 <div class="landscape-grid">
-  <div class="landscape-col">
+  <div class="landscape-col field-vertical">
     <!-- Step 2: Zone -->
-    <div class="section-title"><span class="step-num" id="step-zone-num">2</span> ZONA DE CANCHA</div>
+    <div class="section-title"><span class="step-num" id="step-zone-num">2</span> CANCHA</div>
     <div class="field-wrap">
-      <div class="field-header">
-        <div>Vista desde <b id="attack-team">Equipo A</b></div>
-        <div class="field-dir">Ataque →</div>
-      </div>
       <div class="field">
         <div class="zones" id="zones"></div>
       </div>
-    </div>
-
-    <!-- Selection -->
-    <div class="selection-bar">
-      <div class="selection-inner">
-        <span class="sel-label">REGISTRAR</span>
-        <span class="chip team-a" id="sel-team">EQUIPO A</span>
-        <span class="chip empty" id="sel-zone">Sin zona</span>
-        <button class="clear-zone hidden" id="btn-clear-zone">✕</button>
+      <div class="field-legend">
+        <span><b style="color:var(--team-b)" id="attack-team-b">B</b> ↑</span>
+        <span><b style="color:var(--team-a)" id="attack-team">A</b> ↓</span>
       </div>
     </div>
   </div>
@@ -1480,7 +1566,17 @@ body {
     <!-- Step 3: Event -->
     <div class="section-title"><span class="step-num" id="step-event-num">3</span> EVENTO</div>
     <div class="events-grid" id="events-grid"></div>
-    <div class="events-hint" id="events-hint">Tocá una zona de la cancha para habilitar los eventos</div>
+    <div class="events-hint" id="events-hint">Tocá una zona y luego una acción</div>
+  </div>
+
+  <!-- Selection bar spans both columns -->
+  <div class="selection-bar">
+    <div class="selection-inner">
+      <span class="sel-label">REGISTRAR</span>
+      <span class="chip team-a" id="sel-team">EQUIPO A</span>
+      <span class="chip empty" id="sel-zone">Sin zona</span>
+      <button class="clear-zone hidden" id="btn-clear-zone">✕</button>
+    </div>
   </div>
 </div>
 
@@ -1640,8 +1736,12 @@ body {
     </div>
     <div class="modal-body">
       <div class="help-text">
-        Marcá hasta 16 acciones visibles (4×4 en pantalla principal). Usá las flechas ▲▼ para reordenar.
-        Visibles: <b id="order-counter">0 / 16</b>
+        Marcá hasta 16 acciones visibles. Usá ▲▼ para reordenar manual. Visibles: <b id="order-counter">0 / 16</b>
+      </div>
+      <div class="sort-mode-toggle">
+        <span class="sort-label">Orden por defecto:</span>
+        <button class="sort-btn" data-mode="usage" onclick="setSortMode('usage')">Por uso</button>
+        <button class="sort-btn" data-mode="alpha" onclick="setSortMode('alpha')">Alfabético</button>
       </div>
       <div class="event-order-list" id="event-order-list"></div>
       <div class="btn-row" style="margin-top:14px">
@@ -1649,7 +1749,7 @@ body {
       </div>
       <div class="btn-row" style="margin-top:16px">
         <button class="btn primary" onclick="saveEventOrder()">GUARDAR</button>
-        <button class="btn" onclick="resetEventOrder()">↺ POR USO</button>
+        <button class="btn" onclick="resetEventOrder()">↺ POR DEFECTO</button>
       </div>
     </div>
   </div>
@@ -1749,7 +1849,8 @@ const STATE = {
   syncedIds: new Set(),
   modalPath: [],  // breadcrumb for drilldown
   timer: { running: false, elapsed: 0, lastTick: null, autoTeamSwitch: true },
-  eventOrder: null,  // null = use usage default; array of event IDs = custom
+  eventOrder: null,  // null = use default sortMode; array of event IDs = custom
+  sortMode: 'usage',  // 'usage' or 'alpha' — used when eventOrder is null
   customEvents: []  // user-defined events
 };
 
@@ -1875,14 +1976,37 @@ let EVENT_DEFS = [
   }
 ];
 
+// Zones from Equipo A's fixed perspective. Labels resolved at render time using team names.
+// {A} = teamA short name, {B} = teamB short name
 const ZONE_DEFS = [
-  { n: 1, label: 'Try\nPropia',  cls: 'danger', meta: '0-22' },
-  { n: 2, label: '22\nPropia',   cls: 'danger', meta: '22-40' },
-  { n: 3, label: '40\nPropia',   cls: '',       meta: '40-50' },
-  { n: 4, label: '40\nRival',    cls: '',       meta: '50-60' },
-  { n: 5, label: '22\nRival',    cls: 'attack', meta: '60-80' },
-  { n: 6, label: 'Try\nRival',   cls: 'attack', meta: '80-100' }
+  { n: 1, label: 'Try\n{A}',   cls: 'danger', meta: '0-22',   side: 'A' },
+  { n: 2, label: '22\n{A}',    cls: 'danger', meta: '22-40',  side: 'A' },
+  { n: 3, label: '40\n{A}',    cls: '',       meta: '40-50',  side: 'A' },
+  { n: 4, label: '40\n{B}',    cls: '',       meta: '50-60',  side: 'B' },
+  { n: 5, label: '22\n{B}',    cls: 'attack', meta: '60-80',  side: 'B' },
+  { n: 6, label: 'Try\n{B}',   cls: 'attack', meta: '80-100', side: 'B' }
 ];
+
+function shortTeamName(full, max = 8) {
+  if (!full) return '';
+  return full.length > max ? full.substring(0, max) : full;
+}
+
+function resolveZoneLabel(rawLabel) {
+  return rawLabel
+    .replace(/\{A\}/g, shortTeamName(STATE.config.teamA))
+    .replace(/\{B\}/g, shortTeamName(STATE.config.teamB));
+}
+
+// For events with autoZone (e.g. Try always goes to opponent's in-goal),
+// resolve based on current team. autoZone is defined from Equipo A's POV (Z6 = B's in-goal).
+// If current team is B, mirror to Z1 (A's in-goal) — the physical opposite end.
+function resolveAutoZone(ed) {
+  if (!ed.autoZone) return null;
+  if (STATE.currentTeam === 'A') return ed.autoZone;
+  // For team B, mirror across the field (1<->6, 2<->5, 3<->4)
+  return 7 - ed.autoZone;
+}
 
 const APPS_SCRIPT_CODE = `function doPost(e) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -1959,6 +2083,8 @@ async function loadState() {
       }
     } catch(e) {}
   }
+  const sortMode = await safeGet('sortMode');
+  if (sortMode === 'alpha' || sortMode === 'usage') STATE.sortMode = sortMode;
 }
 async function saveKey(key, val) {
   try { await window.storage.set(key, typeof val === 'string' ? val : JSON.stringify(val)); } catch(e) {}
@@ -1999,19 +2125,24 @@ function renderScoreboard() {
   document.getElementById('team-b-btn').classList.toggle('active', STATE.currentTeam === 'B');
   document.getElementById('half-1').classList.toggle('active', STATE.currentHalf === 1);
   document.getElementById('half-2').classList.toggle('active', STATE.currentHalf === 2);
-  document.getElementById('attack-team').textContent = STATE.currentTeam === 'A' ? STATE.config.teamA : STATE.config.teamB;
+  document.getElementById('attack-team').textContent = shortTeamName(STATE.config.teamA, 8);
+  const teamBLabel = document.getElementById('attack-team-b');
+  if (teamBLabel) teamBLabel.textContent = shortTeamName(STATE.config.teamB, 8);
 }
 
 function renderField() {
   const zones = document.getElementById('zones');
   zones.innerHTML = '';
-  ZONE_DEFS.forEach(zd => {
+  // Render Z6 (top) to Z1 (bottom) for vertical orientation: B's in-goal on top, A's at bottom
+  const reversedZones = [...ZONE_DEFS].reverse();
+  reversedZones.forEach(zd => {
     const el = document.createElement('div');
     el.className = `zone ${zd.cls}`;
     if (STATE.currentZone === zd.n) el.classList.add('selected');
+    const label = resolveZoneLabel(zd.label);
     el.innerHTML = `
       <div class="zone-num">${zd.n}</div>
-      <div class="zone-label">${zd.label.replace('\n','<br>')}</div>`;
+      <div class="zone-label">${label.replace('\n','<br>')}</div>`;
     el.addEventListener('click', () => {
       STATE.currentZone = zd.n;
       if (navigator.vibrate) navigator.vibrate(8);
@@ -2030,7 +2161,7 @@ function renderSelection() {
   const zoneChip = document.getElementById('sel-zone');
   const zd = ZONE_DEFS.find(z => z.n === STATE.currentZone);
   if (zd) {
-    zoneChip.textContent = `Z${zd.n} · ${zd.label.replace('\n',' ')}`;
+    zoneChip.textContent = `Z${zd.n} · ${resolveZoneLabel(zd.label).replace('\n',' ')}`;
     zoneChip.className = 'chip field-zone';
   } else {
     zoneChip.textContent = 'Sin zona';
@@ -2067,15 +2198,21 @@ function getOrderedEvents() {
     const hidden = EVENT_DEFS.filter(ed => !visibleIds.has(ed.id));
     return { visible, hidden };
   }
-  // Default: usage frequency
-  const counts = {};
-  EVENT_DEFS.forEach(ed => { counts[ed.id] = 0; });
-  STATE.events.forEach(e => { if (counts[e.event] !== undefined) counts[e.event]++; });
-  const sorted = [...EVENT_DEFS].sort((a, b) => {
-    const diff = (counts[b.id] || 0) - (counts[a.id] || 0);
-    if (diff !== 0) return diff;
-    return a.name.localeCompare(b.name);
-  });
+  // Default ordering: by usage or alphabetical
+  let sorted;
+  if (STATE.sortMode === 'alpha') {
+    sorted = [...EVENT_DEFS].sort((a, b) => a.name.localeCompare(b.name));
+  } else {
+    // 'usage' (default)
+    const counts = {};
+    EVENT_DEFS.forEach(ed => { counts[ed.id] = 0; });
+    STATE.events.forEach(e => { if (counts[e.event] !== undefined) counts[e.event]++; });
+    sorted = [...EVENT_DEFS].sort((a, b) => {
+      const diff = (counts[b.id] || 0) - (counts[a.id] || 0);
+      if (diff !== 0) return diff;
+      return a.name.localeCompare(b.name);
+    });
+  }
   return { visible: sorted.slice(0, 16), hidden: sorted.slice(16) };
 }
 
@@ -2331,6 +2468,11 @@ function renderEventOrderConfig() {
   const list = document.getElementById('event-order-list');
   list.innerHTML = '';
 
+  // Update sort mode button states
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === STATE.sortMode);
+  });
+
   // Build current order: visible (in their order) + hidden (alphabetical)
   const { visible, hidden } = getOrderedEvents();
   const allOrdered = [...visible, ...hidden];
@@ -2466,8 +2608,22 @@ function resetEventOrder() {
   STATE.eventOrder = null;
   saveKey('eventOrder', null);
   closeModal('event-order-modal');
-  showToast('↺ Orden por uso restaurado', 'success');
+  showToast('↺ Orden por defecto restaurado', 'success');
   render();
+}
+
+function setSortMode(mode) {
+  STATE.sortMode = mode;
+  saveKey('sortMode', mode);
+  // If user has a custom order, reset it so the new sort applies
+  if (STATE.eventOrder) {
+    STATE.eventOrder = null;
+    saveKey('eventOrder', null);
+  }
+  // Re-render the order list AND the main grid
+  renderEventOrderConfig();
+  render();
+  showToast(mode === 'alpha' ? '✓ Orden alfabético' : '✓ Orden por uso', 'success');
 }
 
 // ============== CUSTOM EVENTS ==============
@@ -2727,9 +2883,11 @@ function renderStats() {
     STATE.events.filter(e => e.team === t).forEach(e => { if (e.zone) counts[e.zone-1]++; });
     const max = Math.max(1, ...counts);
     const colorVar = t === 'A' ? '228, 61, 61' : '61, 141, 228';
+    const aShort = shortTeamName(STATE.config.teamA, 6);
+    const bShort = shortTeamName(STATE.config.teamB, 6);
     hm.innerHTML = `
       <div class="stat-label" style="color: var(--team-${t.toLowerCase()})">
-        MAPA DE EVENTOS · ${tname.toUpperCase()}
+        ZONAS DE ${tname.toUpperCase()} (cancha física)
       </div>
       <div class="heatmap">
         ${counts.map(c => {
@@ -2738,7 +2896,7 @@ function renderStats() {
         }).join('')}
       </div>
       <div class="heatmap-labels">
-        <div>Try Pr.</div><div>22 Pr.</div><div>40 Pr.</div><div>40 Ri.</div><div>22 Ri.</div><div>Try Ri.</div>
+        <div>Try ${aShort}</div><div>22 ${aShort}</div><div>40 ${aShort}</div><div>40 ${bShort}</div><div>22 ${bShort}</div><div>Try ${bShort}</div>
       </div>`;
     grid.appendChild(hm);
   });
@@ -2828,11 +2986,11 @@ function renderOutcomeModal() {
   teamPill.textContent = teamName;
   teamPill.className = `pill team-${STATE.currentTeam.toLowerCase()}`;
   const rootEd = STATE.modalPath[0].ed;
-  const zoneNum = rootEd.autoZone || STATE.currentZone;
+  const zoneNum = resolveAutoZone(rootEd) || STATE.currentZone;
   const zd = ZONE_DEFS.find(z => z.n === zoneNum);
   if (zd) {
     const autoTag = rootEd.autoZone ? ' (auto)' : '';
-    zonePill.textContent = `Z${zd.n} · ${zd.label.replace('\n',' ')}${autoTag}`;
+    zonePill.textContent = `Z${zd.n} · ${resolveZoneLabel(zd.label).replace('\n',' ')}${autoTag}`;
   }
 
   backBtn.classList.toggle('hidden', STATE.modalPath.length <= 1);
@@ -2893,7 +3051,7 @@ function logEvent(ed, outcomeId, outcomeLabel, score) {
   if (STATE.timer.running && STATE.timer.lastTick) {
     elapsedNow += Date.now() - STATE.timer.lastTick;
   }
-  const zoneNum = ed.autoZone || STATE.currentZone;
+  const zoneNum = resolveAutoZone(ed) || STATE.currentZone;
   const zd = ZONE_DEFS.find(z => z.n === zoneNum);
   const ev = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
@@ -2909,7 +3067,7 @@ function logEvent(ed, outcomeId, outcomeLabel, score) {
     outcome: outcomeId,
     outcomeLabel: outcomeLabel,
     zone: zoneNum,
-    zoneDesc: zd ? zd.label.replace('\n', ' ') : '',
+    zoneDesc: zd ? resolveZoneLabel(zd.label).replace('\n', ' ') : '',
     score: score || 0
   };
   STATE.events.push(ev);
@@ -3106,7 +3264,7 @@ async function syncNow() {
   }
 }
 
-function downloadXLSX() {
+async function downloadXLSX() {
   if (!STATE.events.length) { showToast('No hay eventos', 'error'); return; }
   if (typeof XLSX === 'undefined') {
     showToast('Cargando librería... probá de nuevo', 'error');
@@ -3386,23 +3544,15 @@ function downloadXLSX() {
   // Always from Local team (Team A) perspective
   // Z1 = ingoal A (defending), Z2 = 22m A, Z3 = 40m A, Z4 = 40m B, Z5 = 22m B, Z6 = ingoal B (attacking)
   // Events stored already from each team's POV. Need to "flip" Team B events because they
-  // were registered from B's perspective but we want everything from A's.
-  // For events with autoZone (Try -> Z6 from each team's POV):
-  //   - Team A try in Z6 stays Z6 (A's attacking ingoal = B's ingoal physically) ✓
-  //   - Team B try in Z6 should become Z1 from A's perspective (B's attacking ingoal = A's ingoal physically)
-  // For manually-zoned events from B: zone needs to be flipped (Z1<->Z6, Z2<->Z5, Z3<->Z4)
-  const flipZone = z => 7 - z; // 1->6, 2->5, 3->4, 4->3, 5->2, 6->1
-
-  const zonesA = [0,0,0,0,0,0]; // A events from A's perspective
-  const zonesB = [0,0,0,0,0,0]; // B events shown from A's perspective (flipped)
+  // All events are recorded with zones from a fixed physical perspective (Equipo A's POV).
+  // Z1 = A's in-goal (where B scores tries against A)
+  // Z6 = B's in-goal (where A scores tries against B)
+  const zonesA = [0,0,0,0,0,0]; // A events
+  const zonesB = [0,0,0,0,0,0]; // B events
   STATE.events.forEach(e => {
     if (!e.zone) return;
-    if (e.team === 'A') {
-      zonesA[e.zone - 1]++;
-    } else {
-      // Flip B's zone to A's perspective
-      zonesB[flipZone(e.zone) - 1]++;
-    }
+    if (e.team === 'A') zonesA[e.zone - 1]++;
+    else zonesB[e.zone - 1]++;
   });
 
   // Field-only stats (Z2-Z5)
@@ -3410,23 +3560,29 @@ function downloadXLSX() {
   const bField = [zonesB[1], zonesB[2], zonesB[3], zonesB[4]];
   const aFieldTot = aField.reduce((a,b)=>a+b,0);
   const bFieldTot = bField.reduce((a,b)=>a+b,0);
-  const aOwnHalf = aField[0] + aField[1]; // Z2+Z3 = own half
-  const aRivalHalf = aField[2] + aField[3]; // Z4+Z5 = rival half
-  const bOwnHalf = bField[2] + bField[3]; // From B's POV their own half = Z4+Z5 from A's POV
-  const bRivalHalf = bField[0] + bField[1]; // B attacking = A's defending zones
+  // Own/rival halves from each team's perspective:
+  // A's own half = Z2+Z3 (left side of field)
+  // A's rival half = Z4+Z5 (right side)
+  // B's own half = Z4+Z5 (B is on the right, attacks left)
+  // B's rival half = Z2+Z3 (B attacking towards A's in-goal)
+  const aOwnHalf = aField[0] + aField[1]; // Z2+Z3
+  const aRivalHalf = aField[2] + aField[3]; // Z4+Z5
+  const bOwnHalf = bField[2] + bField[3];   // Z4+Z5
+  const bRivalHalf = bField[0] + bField[1]; // Z2+Z3
 
-  // Tries by location (in-goal zones)
+  // Tries by location:
+  // A scores in Z6 (B's in-goal); B scores in Z1 (A's in-goal)
   const aTriesZ6 = STATE.events.filter(e => e.team === 'A' && e.event === 'try').length;
   const bTriesZ1 = STATE.events.filter(e => e.team === 'B' && e.event === 'try').length;
 
   const mapaData = [
     [{ v: 'MAPA DE CANCHA — ESTADÍSTICAS DE CAMPO', s: TITLE }],
     [],
-    [{ v: `Cancha vista desde la perspectiva de ${teamA} (izquierda → derecha = ataque). Las zonas Z2 a Z5 son el campo de juego efectivo. Z1 (in-goal ${teamA}) y Z6 (in-goal ${teamB}) son zonas de anotación, no juego de campo.`, s: NOTE }],
+    [{ v: `Cancha física, perspectiva fija desde ${teamA} (a la izquierda). Cada evento se registra dónde físicamente ocurrió, sin importar qué equipo lo ejecutó. ${teamA} ataca hacia la derecha (Z6), ${teamB} ataca hacia la izquierda (Z1). Z2-Z5 = campo de juego. Z1 (in-goal ${teamA}) y Z6 (in-goal ${teamB}) = zonas de anotación.`, s: NOTE }],
     [],
     [{ v: 'DIAGRAMA DE CANCHA', s: SUB }],
     [
-      { v: `← Defiende ${teamA}`, s: { font: { bold: true, sz: 9, color: { rgb: 'C82424' } }, alignment: { horizontal: 'left', indent: 1 } } },
+      { v: `← Ataca ${teamB}`, s: { font: { bold: true, sz: 9, color: { rgb: '2470C8' } }, alignment: { horizontal: 'left', indent: 1 } } },
       null, null, null, null,
       { v: `Ataca ${teamA} →`, s: { font: { bold: true, sz: 9, color: { rgb: 'C82424' } }, alignment: { horizontal: 'right', indent: 1 } } },
       null,
@@ -3468,35 +3624,40 @@ function downloadXLSX() {
     [],
     [{ v: 'TERRITORIO DOMINADO — Mitades de cancha', s: SUB }],
     [
-      { v: 'Equipo', s: HDR }, { v: 'En su mitad', s: HDR }, { v: 'En mitad rival', s: HDR },
-      { v: 'Total campo', s: HDR }, { v: '% en mitad rival', s: HDR },
+      { v: 'Equipo', s: HDR },
+      { v: 'En su propio campo', s: HDR },
+      { v: 'En campo rival', s: HDR },
+      { v: 'Total campo', s: HDR },
+      { v: '% campo rival', s: HDR },
     ],
     [
-      { v: teamA, s: LBL_BOLD },
+      { v: `${teamA} (Z2+Z3 propio · Z4+Z5 rival)`, s: LBL_BOLD },
       { v: aOwnHalf, s: RED }, { v: aRivalHalf, s: RED }, { v: aFieldTot, s: RED },
       { v: aFieldTot ? aRivalHalf/aFieldTot : 0, s: { ...RED, numFmt: '0%' } },
     ],
     [
-      { v: teamB, s: LBL_BOLD },
+      { v: `${teamB} (Z4+Z5 propio · Z2+Z3 rival)`, s: LBL_BOLD },
       { v: bOwnHalf, s: BLUE }, { v: bRivalHalf, s: BLUE }, { v: bFieldTot, s: BLUE },
       { v: bFieldTot ? bRivalHalf/bFieldTot : 0, s: { ...BLUE, numFmt: '0%' } },
     ],
     [],
     [{ v: 'PRESIÓN EN ZONAS DE 22 METROS', s: SUB }],
     [
-      { v: 'Equipo', s: HDR }, { v: 'En su 22m (defendiendo)', s: HDR },
-      { v: 'En 22m rival (atacando)', s: HDR }, { v: 'Ratio ataque/defensa', s: HDR },
+      { v: 'Equipo', s: HDR },
+      { v: 'Defendiendo en su 22m', s: HDR },
+      { v: 'Atacando en 22m rival', s: HDR },
+      { v: 'Ratio ataque/defensa', s: HDR },
     ],
     [
-      { v: teamA, s: LBL_BOLD },
-      { v: aField[0], s: RED }, // Z2 = teamA's 22m
-      { v: aField[3], s: RED }, // Z5 = teamB's 22m
+      { v: `${teamA} (def. Z2 · atq. Z5)`, s: LBL_BOLD },
+      { v: aField[0], s: RED }, // Z2 = teamA's 22m (defending)
+      { v: aField[3], s: RED }, // Z5 = teamB's 22m (attacking)
       { v: aField[0] ? aField[3]/aField[0] : 0, s: { ...RED, numFmt: '0.00' } },
     ],
     [
-      { v: teamB, s: LBL_BOLD },
-      { v: bField[3], s: BLUE }, // Z5 = teamB's own 22m (their defensive zone)
-      { v: bField[0], s: BLUE }, // Z2 = teamA's 22m (their attack)
+      { v: `${teamB} (def. Z5 · atq. Z2)`, s: LBL_BOLD },
+      { v: bField[3], s: BLUE }, // Z5 = teamB's own 22m (defending)
+      { v: bField[0], s: BLUE }, // Z2 = teamA's 22m (attacking)
       { v: bField[3] ? bField[0]/bField[3] : 0, s: { ...BLUE, numFmt: '0.00' } },
     ],
     [],
@@ -3603,18 +3764,44 @@ function downloadXLSX() {
   const filename = `rugby-stats-${matchName.replace(/[^a-zA-Z0-9]/g,'_')}-${new Date().toISOString().slice(0,10)}.xlsx`;
 
   try {
-    XLSX.writeFile(wb, filename);
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Try Web Share API first (lets user pick WhatsApp, email, Drive, etc.)
+    if (navigator.share && navigator.canShare) {
+      const file = new File([blob], filename,
+        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      if (navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: `Radar CULP — ${matchName}`,
+            text: `Estadísticas del partido ${matchName}`
+          });
+          showToast('✓ Excel compartido', 'success');
+          return;
+        } catch(e) {
+          if (e.name === 'AbortError') {
+            // User cancelled — silent
+            return;
+          }
+          // Fall through to download
+        }
+      }
+    }
+
+    // Fallback: direct download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
     showToast('✓ Excel descargado', 'success');
   } catch(e) {
-    console.error('Direct write failed', e);
-    // Fallback: build blob and offer share
-    try {
-      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      showXLSXFallback(blob, filename);
-    } catch(e2) {
-      showToast('Error generando Excel', 'error');
-    }
+    console.error('Export failed', e);
+    showToast('Error generando Excel', 'error');
   }
 }
 
